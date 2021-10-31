@@ -1,10 +1,11 @@
-# Text Summarization on scientific datasets and wikipedia articles
+# Text Summarization on scientific research paper datasets and wikipedia articles
 Main tasks of this python projects:   
 1. Extract text (abstract , content (body)) from the pdf files of research paper using  different python libraries to extract text from the pdf
   
 2.  Text summarization on arxiv and pubmed datasets using different extractive and abstractive text summarization algorithms
 
 3.  Text summarization on wikipedia articles using different extractive and abstractive text summarization algorithms 
+4.   Text summarization on the latex files of research papers using different extractive and abstractive text summarization algorithms 
 
 - Extracting text from the pdf using following libraries:
     - Apache Tika
@@ -13,8 +14,10 @@ Main tasks of this python projects:
     - pdfminer
     
 - Implementation of the following text summarization algorithms:
-    Transfromers library pipeline (default)
+    - Transfromers library pipeline (default summarizer)
     - XLM Transformers
+    - Google Bigbird summarizer with attention mechanism
+    - GooglE pegasus xum
     - GPT-2 Transformers
     - Gensim with TextRank
     - Text Rank Algorithm
@@ -32,6 +35,7 @@ Main tasks of this python projects:
     2.	PubMed Dataset 
 
 - Wikipedia Article
+- Latex files of the research papers in area of computer science
 
 ## Scientific Paper Datasets Attributes:
 - Two sets of long and structured documents obtained from Open Access repositories.
@@ -41,8 +45,24 @@ Main tasks of this python projects:
 - Abstracts used as ground-truth summaries
 
 Wikipedia Article:
-- Wikipedia articles content on Artificial Intelligence
+- Wikipedia articles content on Artificial Intelligence, Machine Learning
 - https://en.wikipedia.org/wiki/Artificial_intelligence
+- https://en.wikipedia.org/wiki/Machine_learning
+
+
+# Text preprocessing 
+##  Data: Wikipedia article conent in Computer Science
+Preprocessing steps:
+- Convert everything to lowercase
+- Remove HTML tags
+- Contraction mapping
+- Remove (‘s)
+- Remove any text inside the parenthesis [] ( )
+- Elimination of not required punctuations and special characters
+## Text  Preprocessing for the latex files
+- Remove text containig latex commands
+- Remove text inside the parenthesis {}
+- Remove any text cointaining equations 
 # Evaluation:
 - Abstract of scientific papers used as ground-truth summaries
 - Evaluation Matrices: ROUGE (metric)
