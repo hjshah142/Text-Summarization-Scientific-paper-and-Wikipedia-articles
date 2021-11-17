@@ -58,11 +58,20 @@ class LatexTextSummarizer:
                 latex_file_wo_comments.append(line)
         latex_text_wo_comments = "".join(latex_file_wo_comments)
         latex_text_cleaned = latex_text_pre_processing(latex_text_wo_comments)
-        abstract, section_names = latex_extract_abstract_sections(latex_text_cleaned)
-        self.section_content = get_sections_abstract_text(abstract, section_names, latex_text_cleaned)
+        self.abstract, self.section_names = latex_extract_abstract_sections(latex_text_cleaned)
+        self.section_content = get_sections_abstract_text(self.abstract, self.section_names, latex_text_cleaned)
 
 
-file_path = r"C:\Users\lenovo\Downloads\[PAKDD] Superset-Learning for Algorithm Selection with Right-Censored Data (1)\main.tex"
-latex_text_summarizer = LatexTextSummarizer(file_path)
-latex_text_summarizer.section_content
+file_sample = r"C:\Users\lenovo\Downloads\[PAKDD] Superset-Learning for Algorithm Selection with Right-Censored Data (1)\main.tex"
+latex_text_summarizer = LatexTextSummarizer(file_sample)
 print(latex_text_summarizer.section_content)
+# print section names
+print("Section", latex_text_summarizer.section_names)
+
+file_sample2 = r"C:\Users\lenovo\Downloads\[KI] Hybrid Loss for Algorithm Selection_ Regression and Ranking Loss\main.tex"
+latex_text_summarizer = LatexTextSummarizer(file_sample2)
+print(latex_text_summarizer.section_content)
+# print sections
+print("Section", latex_text_summarizer.section_names)
+
+
