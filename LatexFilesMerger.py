@@ -28,8 +28,11 @@ class LatexFilesMerger:
         input_files_path_list = []
         input_file_path_content_dir = {}
         for latex_input_files in imported_latex_file_names:
-            latex_input_files = os.path.normpath(latex_input_files)
-            file_path = os.path.join(self.latext_directory_name, latex_input_files) + ".tex"
+            latex_input_files = os.path(latex_input_files)
+            file_path = os.path.join(self.latext_directory_name, latex_input_files)
+            print(file_path)
+            if not file_path.endswith(".tex"):
+                file_path = file_path + ".tex"
             input_files_path_list.append(file_path)
             latex_text_wo_comments = self.latex_file_read_remove_comment(file_path)
             input_file_command = "\input{" + latex_input_files + "}"
@@ -61,7 +64,10 @@ class LatexFilesMerger:
         return merged_text
 
 
-latex_dir_name = "C://Users//lenovo//OneDrive//latex_papers//thesis"
-main_file_path = "C://Users//lenovo//OneDrive//latex_papers//thesis//thesis.tex"
+# latex_dir_name = "C://Users//lenovo//OneDrive//latex_papers//2105.08215"
+# main_file_path = "C://Users//lenovo//OneDrive//latex_papers//2005.11736//arxiv-main.tex"
+
+latex_dir_name = r"C:/Users/lenovo/OneDrive/latex_papers/2105.08215"
+main_file_path = r"C:/Users/lenovo/OneDrive/latex_papers/2005.11736/arxiv-main.tex"
 latex_file_merger = LatexFilesMerger(latex_dir_name, main_file_path)
 merged_text_content = latex_file_merger.latex_files_merger()
