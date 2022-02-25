@@ -1,0 +1,4 @@
+sumy~=0.9.0
+nltk~=3.7
+transformers~=4.16.2
+pylatexenc~=2.10

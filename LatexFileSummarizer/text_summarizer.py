@@ -1,22 +1,25 @@
 import torch
 import sumy
 import gensim
+import math
 from gensim.summarization import summarize
 import nltk
 import re
 
-nltk.download('punkt')
+# nltk.download('punkt')
 from transformers import BartForConditionalGeneration, BartTokenizer, BartConfig, BartModel
 from transformers import XLMWithLMHeadModel, XLMTokenizer
 from transformers import T5Tokenizer, T5Config, T5ForConditionalGeneration
 from transformers import BigBirdPegasusForConditionalGeneration, AutoTokenizer
 from transformers import PegasusForConditionalGeneration, PegasusTokenizer
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
 # Import the LexRank summarizer
 from sumy.summarizers.lex_rank import LexRankSummarizer
 # Importing the parser and tokenizer
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
+from nltk.tokenize import sent_tokenize
+from nltk.tokenize import word_tokenize
 # Import the LexRank summarizer
 from sumy.summarizers.lex_rank import LexRankSummarizer
 
@@ -27,6 +30,17 @@ lsa_summarizer = LsaSummarizer()
 # Parsing the text string using PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.parsers.plaintext import PlaintextParser
+
+
+def set_summary_length(text):
+    number_of_words = len(word_tokenize(text))
+    number_of_sentences = len(sent_tokenize(text))
+    print(number_of_words)
+    print(number_of_sentences)
+    summary_senteces_len = math.ceil(number_of_sentences / 3)
+    summary_min_tokens = math.ceil(number_of_words / 4)
+    summary_max_tokens = number_of_words // 3
+    return summary_min_tokens, summary_max_tokens, summary_senteces_len
 
 
 class TextSummarizer:
@@ -46,8 +60,19 @@ class TextSummarizer:
         self.tokenizer_Pegasus = PegasusTokenizer.from_pretrained('google/pegasus-xsum')
         self.model_Pegasus = PegasusForConditionalGeneration.from_pretrained('google/pegasus-xsum')
 
-    def text_summarizer(self, text, min_len, max_len, num_sentences):
-        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    def set_summary_length(text):
+        number_of_words = len(word_tokenize(text))
+        number_of_sentences = len(sent_tokenize(text))
+        print(number_of_words)
+        print(number_of_sentences)
+        summary_senteces_len = math.ceil(number_of_sentences / 3)
+        summary_min_tokens = math.ceil(number_of_words / 4)
+        summary_max_tokens = number_of_words // 3
+        return summary_min_tokens, summary_max_tokens, summary_senteces_len
+
+    def text_summarizer(self, text):
+        min_len, max_len, num_sentences = set_summary_length(text)
+        # device = 'cuda' if torch.cuda.is_available() else 'cpu'
         text_summary_dict = {}
 
         text_summary_dict['_text_'] = text
@@ -96,3 +121,4 @@ class TextSummarizer:
             lsa_summary = lsa_summary + " " + str(sentence)
         text_summary_dict['lsa_summary'] = lsa_summary
         return text_summary_dict
+

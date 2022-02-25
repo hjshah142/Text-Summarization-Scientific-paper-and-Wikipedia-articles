@@ -9,7 +9,6 @@ class LatexFilesMerger:
         self.latext_directory_name = latext_directory_name
         self.main_latex_file_path = main_latex_file_path
 
-
     def latex_file_read_remove_comment(self, file_path):
         latex_text_list = open(file_path).readlines()
         latex_file_wo_comments = []
@@ -31,7 +30,7 @@ class LatexFilesMerger:
             latex_input_files = os.path.normpath(latex_input_files)
             file_path = os.path.join(self.latext_directory_name, latex_input_files)
             if not file_path.endswith(".tex"):
-              file_path = file_path + ".tex"
+                file_path = file_path + ".tex"
             input_files_path_list.append(file_path)
             latex_text_wo_comments = self.latex_file_read_remove_comment(file_path)
             input_file_command = "\input{" + latex_input_files + "}"
