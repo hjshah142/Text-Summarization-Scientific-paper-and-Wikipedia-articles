@@ -4,29 +4,29 @@ from LatexFileSummarizer.latex_files_merger import LatexFilesMerger
 from LatexFileSummarizer.latex_text_parser import LatexTextParser
 
 
-def merge_latex_files(latex_dir_name, main_latex_file_path, merged_file_path):
-    latex_file_merger = LatexFilesMerger(latex_dir_name, main_latex_file_path)
-    merged_text_content = latex_file_merger.latex_files_merger()
-    try:
-        with open(merged_file_path, "w") as f:
-            print("Merged File", merged_file_path, "created !!!")
-            f.write(merged_text_content)
-    except FileNotFoundError:
-        print("The directory does not exist/accecible")
-
-    return merged_text_content
-
-
-
-latex_dir_name = r"C:\Users\lenovo\Downloads\[KI] Hybrid Loss for Algorithm Selection_ Regression and Ranking Loss"
-main_file_path = r"C:\Users\lenovo\Downloads\[KI] Hybrid Loss for Algorithm Selection_ Regression and Ranking Loss\main.tex"
-latext_directory_name = "/content/drive/MyDrive/latex_papers/2105.08215"
-merged_file_path = "latex_sample_merged.tex"
-merged_text_content = merge_latex_files(latex_dir_name, main_file_path, merged_file_path)
-latex_parser = LatexTextParser(merged_file_path)
-section_content, abstract, section_names = latex_parser.latex_text_parser()
-print(section_names)
-# print(abstract)
+# def merge_latex_files(latex_dir_name, main_latex_file_path, merged_file_path):
+#     latex_file_merger = LatexFilesMerger(latex_dir_name, main_latex_file_path)
+#     merged_text_content = latex_file_merger.latex_files_merger()
+#     try:
+#         with open(merged_file_path, "w") as f:
+#             print("Merged File", merged_file_path, "created !!!")
+#             f.write(merged_text_content)
+#     except FileNotFoundError:
+#         print("The directory does not exist/accecible")
+#
+#     return merged_text_content
+#
+#
+#
+# latex_dir_name = r"C:\Users\lenovo\Downloads\[KI] Hybrid Loss for Algorithm Selection_ Regression and Ranking Loss"
+# main_file_path = r"C:\Users\lenovo\Downloads\[KI] Hybrid Loss for Algorithm Selection_ Regression and Ranking Loss\main.tex"
+# latext_directory_name = "/content/drive/MyDrive/latex_papers/2105.08215"
+# merged_file_path = "latex_sample_merged.tex"
+# merged_text_content = merge_latex_files(latex_dir_name, main_file_path, merged_file_path)
+# latex_parser = LatexTextParser(merged_file_path)
+# section_content, abstract, section_names = latex_parser.latex_text_parser()
+# print(section_names)
+# # print(abstract)
 
 
 textSummarizer = TextSummarizer()
@@ -70,7 +70,7 @@ for summary_name in text_summary_dict:
 
 
 # save the pdf with name .pdf
-pdf.output("/content/summary_results.pdf", 'F')
+pdf.output("data/text_summary_results.pdf", 'F')
 
 
 
