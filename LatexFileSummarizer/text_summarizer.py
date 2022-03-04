@@ -6,7 +6,7 @@ from gensim.summarization import summarize
 import nltk
 import re
 
-# nltk.download('punkt')
+nltk.download('punkt')
 # from transformers import BartForConditionalGeneration, BartTokenizer, BartConfig, BartModel
 from transformers import XLMWithLMHeadModel, XLMTokenizer
 # from transformers import T5Tokenizer, T5Config, T5ForConditionalGeneration
