@@ -1,15 +1,12 @@
 import math
-
-import nltk
-
-nltk.download('punkt')
 from gensim.summarization import summarize
-
 from transformers import BartForConditionalGeneration, BartTokenizer
 # from transformers import XLMWithLMHeadModel, XLMTokenizer
-from transformers import T5Tokenizer, T5ForConditionalGeneration
-from transformers import BigBirdPegasusForConditionalGeneration, AutoTokenizer
-from transformers import PegasusForConditionalGeneration, PegasusTokenizer
+
+# from transformers import T5Tokenizer, T5ForConditionalGeneration
+# from transformers import BigBirdPegasusForConditionalGeneration, AutoTokenizer
+# from transformers import PegasusForConditionalGeneration, PegasusTokenizer
+
 # from bs4 import BeautifulSoup
 # Importing the parser and tokenizer
 from sumy.parsers.plaintext import PlaintextParser
@@ -45,16 +42,16 @@ class TextSummarizer:
         self.tokenizer_bart = BartTokenizer.from_pretrained('facebook/bart-large-cnn')
         self.model_bart = BartForConditionalGeneration.from_pretrained('facebook/bart-large-cnn')
         # Instantiating the model and tokenizer t5
-        self.model_t5 = T5ForConditionalGeneration.from_pretrained('t5-small')
-        self.tokenizer_t5 = T5Tokenizer.from_pretrained('t5-small')
-        # Instantiating the model and tokenizer google_bigbird
-        self.model_BigBird = BigBirdPegasusForConditionalGeneration.from_pretrained(
-            "google/bigbird-pegasus-large-arxiv", attention_type="original_full")
-        self.tokenizer_BigBird = AutoTokenizer.from_pretrained("google/bigbird-pegasus-large-arxiv")
+        # self.model_t5 = T5ForConditionalGeneration.from_pretrained('t5-small')
+        # self.tokenizer_t5 = T5Tokenizer.from_pretrained('t5-small')
+        # # Instantiating the model and tokenizer google_bigbird
+        # self.model_BigBird = BigBirdPegasusForConditionalGeneration.from_pretrained(
+        #     "google/bigbird-pegasus-large-arxiv", attention_type="original_full")
+        # self.tokenizer_BigBird = AutoTokenizer.from_pretrained("google/bigbird-pegasus-large-arxiv")
         # by default encoder-attention is `block_sparse` with num_random_blocks=3, block_size=64
 
-        self.tokenizer_Pegasus = PegasusTokenizer.from_pretrained('google/pegasus-xsum')
-        self.model_Pegasus = PegasusForConditionalGeneration.from_pretrained('google/pegasus-xsum')
+        # self.tokenizer_Pegasus = PegasusTokenizer.from_pretrained('google/pegasus-xsum')
+        # self.model_Pegasus = PegasusForConditionalGeneration.from_pretrained('google/pegasus-xsum')
 
     @staticmethod
     def set_summary_length(text):
@@ -127,8 +124,9 @@ class TextSummarizer:
         # self.text_summary_dict['_text_'] = text
         self.min_len, self.max_len, self.num_sentences = self.set_summary_length(summary_text)
         self.bart_model_summary_generation(summary_text)
-        self.google_pagasus_model_summary_generation(summary_text)
-        self.t5_transformers_summary_generation(summary_text)
+        # self.bigbird_model_summary_generation(summary_text)
+        # self.google_pagasus_model_summary_generation(summary_text)
+        # self.t5_transformers_summary_generation(summary_text)
         self.lex_rank_summary_generation(summary_text)
         self.lsa_summary_generation(summary_text)
         self.gensim_summary_generation(summary_text)

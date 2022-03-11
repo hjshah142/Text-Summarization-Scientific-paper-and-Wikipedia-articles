@@ -1,3 +1,5 @@
+
+
 # Text Summarization on scientific research paper datasets and wikipedia articles
 Main tasks of this python projects:   
 1. Extract text (abstract , content (body)) from the pdf files of research paper using  different python libraries to extract text from the pdf

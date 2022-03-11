@@ -1,8 +1,12 @@
 from fpdf import FPDF
 from LatexFileSummarizer.text_summarizer import TextSummarizer
+import pickle
 
+def save_object(obj, filename):
+    with open(filename, 'wb') as outp:  # Overwrites any existing file.
+        pickle.dump(obj, outp, pickle.HIGHEST_PROTOCOL)
 
-def text_summary_generator(summary_text, pdf_file_path):
+def text_summary_generator(summary_text, text_summary_dict):
     # save FPDF() class into a  variable pdf
     pdf = FPDF()
     # pdf.set_auto_page_break(auto=True)
@@ -39,5 +43,7 @@ increasingly capable, tasks considered to require "intelligence" are often remov
 a phenomenon known as the AI effect. For instance, optical character recognition is frequently excluded from things 
 considered to be AI, having become a routine technology. """
 textSummarizer = TextSummarizer()
-text_summary_dict = textSummarizer.text_summarizer(text=ai_blog_wiki)
-text_summary_generator(ai_blog_wiki, text_summary_dict, pdf_file_path)
+# sample usage
+save_object(textSummarizer, r'C:\Users\lenovo\OneDrive - mail.uni-paderborn.de\Documents\Scientific-Papers-Text-Analytics\TextSummaryModels\text_summary_obj.pkl')
+text_summary_dict = textSummarizer.text_summarizer(ai_blog_wiki)
+text_summary_generator(ai_blog_wiki, text_summary_dict)
