@@ -1,10 +1,7 @@
-from fpdf import FPDF
-from LatexFileSummarizer.text_summarizer import TextSummarizer
 import pickle
+from fpdf import FPDF
+# from LatexFileSummarizer.text_summarizer import TextSummarizer
 
-def save_object(obj, filename):
-    with open(filename, 'wb') as outp:  # Overwrites any existing file.
-        pickle.dump(obj, outp, pickle.HIGHEST_PROTOCOL)
 
 def text_summary_generator(summary_text, text_summary_dict):
     # save FPDF() class into a  variable pdf
@@ -28,7 +25,7 @@ def text_summary_generator(summary_text, text_summary_dict):
         summary = text_summary_dict[summary_name]
         pdf.multi_cell(200, 9, txt="".join(summary), align='L')
     # save the pdf
-    pdf.output("/data/summary_results.pdf", 'F')
+    pdf.output("data\\summary_results.pdf", 'F')
 
 
 ai_blog_wiki = """Artificial intelligence (AI) is intelligence demonstrated by machines, as opposed to the natural 
@@ -42,8 +39,10 @@ systems (used by YouTube, Amazon and Netflix), understanding human speech (such 
 increasingly capable, tasks considered to require "intelligence" are often removed from the definition of AI, 
 a phenomenon known as the AI effect. For instance, optical character recognition is frequently excluded from things 
 considered to be AI, having become a routine technology. """
-textSummarizer = TextSummarizer()
-# sample usage
-save_object(textSummarizer, r'C:\Users\lenovo\OneDrive - mail.uni-paderborn.de\Documents\Scientific-Papers-Text-Analytics\TextSummaryModels\text_summary_obj.pkl')
+
+file_name = open(r"C:\Users\lenovo\OneDrive - mail.uni-paderborn.de\Documents\Scientific-Papers-Text-Analytics\TextSummaryModels\text_summary_obj.pkl",'rb')
+
+textSummarizer = pickle.load(file_name)
+
 text_summary_dict = textSummarizer.text_summarizer(ai_blog_wiki)
 text_summary_generator(ai_blog_wiki, text_summary_dict)

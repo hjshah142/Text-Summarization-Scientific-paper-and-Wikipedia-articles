@@ -126,3 +126,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# ignoring create latex merged file
+latex_sample_merged.tex
