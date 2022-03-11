@@ -1,20 +1,16 @@
-import torch
-import sumy
-import gensim
 import math
-from gensim.summarization import summarize
+
 import nltk
-import re
 
 nltk.download('punkt')
-from transformers import BartForConditionalGeneration, BartTokenizer, BartConfig, BartModel
-from transformers import XLMWithLMHeadModel, XLMTokenizer
-from transformers import T5Tokenizer, T5Config, T5ForConditionalGeneration
+from gensim.summarization import summarize
+
+from transformers import BartForConditionalGeneration, BartTokenizer
+# from transformers import XLMWithLMHeadModel, XLMTokenizer
+from transformers import T5Tokenizer, T5ForConditionalGeneration
 from transformers import BigBirdPegasusForConditionalGeneration, AutoTokenizer
 from transformers import PegasusForConditionalGeneration, PegasusTokenizer
 # from bs4 import BeautifulSoup
-# Import the LexRank summarizer
-from sumy.summarizers.lex_rank import LexRankSummarizer
 # Importing the parser and tokenizer
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
@@ -33,10 +29,10 @@ def set_summary_length(text):
     number_of_sentences = len(sent_tokenize(text))
     print(number_of_words)
     print(number_of_sentences)
-    summary_senteces_len = math.ceil(number_of_sentences / 3)
+    summary_sentences_len = math.ceil(number_of_sentences / 3)
     summary_min_tokens = math.ceil(number_of_words / 4)
     summary_max_tokens = number_of_words // 3
-    return summary_min_tokens, summary_max_tokens, summary_senteces_len
+    return summary_min_tokens, summary_max_tokens, summary_sentences_len
 
 
 class TextSummarizer:
@@ -46,8 +42,8 @@ class TextSummarizer:
         self.min_len = None
         self.text_summary_dict = {}
         # Instantiating the model and tokenizer bart
-        # self.tokenizer_bart = BartTokenizer.from_pretrained('facebook/bart-large-cnn')
-        # self.model_bart = BartForConditionalGeneration.from_pretrained('facebook/bart-large-cnn')
+        self.tokenizer_bart = BartTokenizer.from_pretrained('facebook/bart-large-cnn')
+        self.model_bart = BartForConditionalGeneration.from_pretrained('facebook/bart-large-cnn')
         # Instantiating the model and tokenizer t5
         self.model_t5 = T5ForConditionalGeneration.from_pretrained('t5-small')
         self.tokenizer_t5 = T5Tokenizer.from_pretrained('t5-small')
@@ -60,6 +56,7 @@ class TextSummarizer:
         self.tokenizer_Pegasus = PegasusTokenizer.from_pretrained('google/pegasus-xsum')
         self.model_Pegasus = PegasusForConditionalGeneration.from_pretrained('google/pegasus-xsum')
 
+    @staticmethod
     def set_summary_length(text):
         number_of_words = len(word_tokenize(text))
         number_of_sentences = len(sent_tokenize(text))
@@ -70,47 +67,37 @@ class TextSummarizer:
         summary_max_tokens = number_of_words // 3
         return summary_min_tokens, summary_max_tokens, summary_sentences_len
 
-    def text_summarizer(self, text):
-        self.min_len, self.max_len, self.num_sentences = set_summary_length(text)
-        # device = 'cuda' if torch.cuda.is_available() else 'cpu'
-
-        # text_summary_dict['_text_'] = text
+    def bart_model_summary_generation(self, text):
         # Encoding the inputs and passing them to model.generate()
-        # inputs = self.tokenizer_bart.batch_encode_plus([text], return_tensors='pt', truncation=True)
-        # summary_ids = self.model_bart.generate(inputs['input_ids'], early_stopping=True, min_length=min_len,
-        #                                        max_length=max_len)
-        # bart_summary = self.tokenizer_bart.decode(summary_ids[0], skip_special_tokens=True)
-        # # print(bart_summary)
-        # text_summary_dict['bart_summary'] = bart_summary
+        inputs = self.tokenizer_bart.batch_encode_plus([text], return_tensors='pt', truncation=True)
+        summary_ids = self.model_bart.generate(inputs['input_ids'], early_stopping=True, min_length=self.min_len,
+                                               max_length=self.max_len)
+        bart_summary = self.tokenizer_bart.decode(summary_ids[0], skip_special_tokens=True)
+        # print(bart_summary)
+        self.text_summary_dict['bart_summary'] = bart_summary
 
+    def bigbird_model_summary_generation(self, text):
         inputs = self.tokenizer_BigBird(text, return_tensors='pt')
-        summary_ids = self.model_BigBird.generate(**inputs, min_length=min_len, max_length=max_len)
+        summary_ids = self.model_BigBird.generate(**inputs, min_length=self.min_len, max_length=self.max_len)
         summary_BigBird = self.tokenizer_BigBird.batch_decode(summary_ids, skip_special_tokens=True)
         self.text_summary_dict['summary_BigBird'] = summary_BigBird
-        print(summary_BigBird)
+        # print(summary_BigBird)
 
+    def google_pagasus_model_summary_generation(self, text):
         # google pegasus summarization
+        inputs = self.tokenizer_Pegasus([text], truncation=True, padding='longest', return_tensors="pt")
+        summary_ids = self.model_Pegasus.generate(inputs['input_ids'], min_length=self.min_len, max_length=self.max_len)
+        summary_google_pegasus = self.tokenizer_Pegasus.batch_decode(summary_ids, skip_special_tokens=True)
+        self.text_summary_dict['summary_google_pegasus'] = summary_google_pegasus
 
-        # inputs = self.tokenizer_Pegasus([text], truncation=True, padding='longest', return_tensors="pt")
-        # summary_ids = self.model_Pegasus.generate(inputs['input_ids'], min_length=min_len, max_length=max_len)
-        # summary_google_pegasus = self.tokenizer_Pegasus.batch_decode(summary_ids, skip_special_tokens=True)
-        # text_summary_dict['summary_google_pegasus'] = summary_google_pegasus
-
-        # t5_text = "summarize:" + text
-        # # encoding the input text
-        # input_ids = self.tokenizer_t5.encode(t5_text, return_tensors='pt')
-        # summary_ids = self.model_t5.generate(input_ids, early_stopping=True, min_length=min_len, max_length=max_len)
-        # t5_summary = self.tokenizer_t5.decode(summary_ids[0], skip_special_tokens=True)
-        # text_summary_dict['t5_summary'] = t5_summary
-
-        my_parser = PlaintextParser.from_string(text, Tokenizer('english'))
-        lexrank_summary_sentences = lex_rank_summarizer(my_parser.document, sentences_count=self.num_sentences)
-        lexrank_summary = ""
-        for sentence in lexrank_summary_sentences:
-            lexrank_summary = lexrank_summary + " " + str(sentence)
-        self.text_summary_dict['lexrank_summary'] = lexrank_summary
-
-        return self.text_summary_dict
+    def t5_transformers_summary_generation(self, text):
+        t5_text = "summarize:" + text
+        # encoding the input text
+        input_ids = self.tokenizer_t5.encode(t5_text, return_tensors='pt')
+        summary_ids = self.model_t5.generate(input_ids, early_stopping=True, min_length=self.min_len,
+                                             max_length=self.max_len)
+        t5_summary = self.tokenizer_t5.decode(summary_ids[0], skip_special_tokens=True)
+        self.text_summary_dict['t5_summary'] = t5_summary
 
     def lex_rank_summary_generation(self, text):
         my_parser = PlaintextParser.from_string(text, Tokenizer('english'))
@@ -119,8 +106,6 @@ class TextSummarizer:
         for sentence in lexrank_summary_sentences:
             lexrank_summary = lexrank_summary + " " + str(sentence)
         self.text_summary_dict['lexrank_summary'] = lexrank_summary
-
-        return self.text_summary_dict
 
     def lsa_summary_generation(self, text):
         # creating the lsa summarizer
@@ -135,3 +120,17 @@ class TextSummarizer:
     def gensim_summary_generation(self, text):
         summary_gensim = summarize(text)
         self.text_summary_dict['gensim_summary'] = summary_gensim
+
+    def text_summarizer(self, summary_text):
+
+        # device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        # self.text_summary_dict['_text_'] = text
+        self.min_len, self.max_len, self.num_sentences = self.set_summary_length(summary_text)
+        self.bart_model_summary_generation(summary_text)
+        self.google_pagasus_model_summary_generation(summary_text)
+        self.t5_transformers_summary_generation(summary_text)
+        self.lex_rank_summary_generation(summary_text)
+        self.lsa_summary_generation(summary_text)
+        self.gensim_summary_generation(summary_text)
+
+        return self.text_summary_dict
