@@ -17,11 +17,11 @@ def find_list_subsection_content(s, start_string):
 
 class LatexTextParser:
 
-    def __init__(self, file_path):
+    def __init__(self, latex_file_path):
         """
         Class removes the latex comment, performs the preprocessing of latex files,
         extract abstract, toc, sections and subsections from the latex files
-        :param file_path: path of a latex
+        :param latex_file_path: path of a latex file
         """
         self.sub_sections_dict = dict()
         self.toc = ""
@@ -30,15 +30,21 @@ class LatexTextParser:
         # self.sub_sections_content = dict()
         self.latex_metadata = dict()
         self.section_names = []
-        self.abstract = None
-        self.file_path = file_path
-        latex_file_list = open(file_path).readlines()
+        self.abstract = ""
+        self.file_path = latex_file_path
+        latex_file_list = open(latex_file_path).readlines()
         latex_file_wo_comments = []
         # removal of comments in the latex files
         for line in latex_file_list:
             if not line.startswith("%"):
                 latex_file_wo_comments.append(line)
         self.latex_text_wo_comments = "".join(latex_file_wo_comments)
+
+    def latex_text_parser(self):
+        latex_text_cleaned = self.latex_text_pre_processing()
+        abstract, section_names = self.latex_extract_abstract_sections(latex_text_cleaned)
+        section_content = self.get_sections_text(section_names, latex_text_cleaned)
+        return section_content, abstract, section_names
 
     def latex_text_pre_processing(self):
         figure_content = re.findall(r'\\begin{figure}(.*?)\\end{figure}', self.latex_text_wo_comments, re.S)
@@ -56,26 +62,11 @@ class LatexTextParser:
     def latex_extract_abstract_sections(self, latex_text_cleaned):
         abstract = re.findall(r'\\begin{abstract}(.*?)\\end{abstract}', latex_text_cleaned, re.S)
         self.section_names = re.findall(r'\\section{(.*?)}', latex_text_cleaned, re.S)
-        self.abstract = abstract[0]
+        abstract_text = abstract[0]
+        self.abstract = LatexNodes2Text().latex_to_text(abstract_text)
         return self.abstract, self.section_names
 
-    def extract_subsection(self, sections_text):
-
-        sub_section_names = re.findall(r'\\subsection{(.*?)}', sections_text, re.S)
-
-        # print("Subsections:", len(sub_section_names))
-        self.toc = self.toc + "Subsections:" + str(len(sub_section_names)) + "\n"
-        for subsections in sub_section_names:
-            # print("\t", subsections)
-            self.toc = self.toc + "\t" + subsections + "\n"
-        sub_section_content = []
-        if len(sub_section_names) > 0:
-            sub_section_content = self.get_subsections_content(sub_section_names, sections_text, )
-
-        # print(sub_section_names)
-        return sub_section_names, sub_section_content
-
-    def get_sections_abstract_text(self, abstract, section_names, latex_text_cleaned):
+    def get_sections_text(self, section_names, latex_text_cleaned):
 
         sections_tags = []
         for section in section_names:
@@ -99,9 +90,24 @@ class LatexTextParser:
             sections_text = LatexNodes2Text().latex_to_text(sections_text_latex)
             self.section_content[section_names[section_index]] = sections_text
 
-        abstract_text = LatexNodes2Text().latex_to_text(abstract)
-        self.section_content['abstract'] = abstract_text
+        # self.section_content['abstract'] = abstract_text
         return self.section_content
+
+    def extract_subsection(self, sections_text):
+
+        sub_section_names = re.findall(r'\\subsection{(.*?)}', sections_text, re.S)
+
+        # print("Subsections:", len(sub_section_names))
+        self.toc = self.toc + "Subsections:" + str(len(sub_section_names)) + "\n"
+        for subsections in sub_section_names:
+            # print("\t", subsections)
+            self.toc = self.toc + "\t" + subsections + "\n"
+        sub_section_content = []
+        if len(sub_section_names) > 0:
+            sub_section_content = self.get_subsections_content(sub_section_names, sections_text, )
+
+        # print(sub_section_names)
+        return sub_section_names, sub_section_content
 
     def get_subsections_content(self, sub_section_names, sections_text):
         sub_sections_tags = []
@@ -120,19 +126,23 @@ class LatexTextParser:
             # print(subsections_text_latex[0:50])
             # print("sub_section_names[sub_section_index]", sub_section_names[sub_section_index])
             sub_section_content.append(subsections_text_latex)
-            # TODO extract subsubsection content
+
             # self.sub_sections_content.append(subsections_text_latex[0:25])
 
-        last_sub_section_text = find_list_subsection_content(sections_text, sub_sections_tags[-1] )
+        last_sub_section_text = find_list_subsection_content(sections_text, sub_sections_tags[-1])
         sub_section_content.append(last_sub_section_text)
-        print(last_sub_section_text)
+        # print(last_sub_section_text)
+        # TODO extract subsubsection content
+        self.get_subsubsections(sub_section_content)
         return sub_section_content
 
-    def latex_text_parser(self):
-        latex_text_cleaned = self.latex_text_pre_processing()
-        abstract, section_names = self.latex_extract_abstract_sections(latex_text_cleaned)
-        section_content = self.get_sections_abstract_text(abstract, section_names, latex_text_cleaned)
-        return section_content, abstract, section_names
+    def get_subsubsections(self, sub_section_content):
+        sub_sub_section_content_tex = " ".join(sub_section_content)
+        sub_sub_section_names = re.findall(r'\\subsubsection{(.*?)}', sub_sub_section_content_tex, re.S)
+        if len(sub_sub_section_names) > 0:
+            for subsubsection in sub_sub_section_names:
+                print("\t\t subsections:", subsubsection)
+                self.toc = self.toc + "\t" + "\t" + subsubsection + "\n"
 
 
 file_path = r"C:\Users\lenovo\Downloads\[KI] Hybrid Loss for Algorithm Selection_ Regression and Ranking Loss\main.tex"
@@ -141,7 +151,6 @@ section_content_file, abstract_file, section_names_file = latexTextParser.latex_
 # # print(section_content)
 # print(latexTextParser.toc)
 # print(latexTextParser.sub_sections_content)
-# ssd = open(file_path, 'r').read()
+# ssd = open(latex_file_path, 'r').read()
 # answer = find_substring(ssd, "\subsection{Evaluation Setup}","\subsection{Results}")
 # print(answer)
-
