@@ -1,8 +1,8 @@
 from LatexFileSummarizer.latex_files_merger import LatexFilesMerger
 from LatexFileSummarizer.latex_text_parser import LatexTextParser
 
-latex_dir_name = r"C:\Users\lenovo\Downloads\[KI] Hybrid Loss for Algorithm Selection_ Regression and Ranking Loss"
-main_file_path = r"C:\Users\lenovo\Downloads\[KI] Hybrid Loss for Algorithm Selection_ Regression and Ranking Loss\main.tex"
+latex_dir_name = r"C:\Users\lenovo\OneDrive\latex_papers\thesis"
+main_file_path = r"C:\Users\lenovo\OneDrive\latex_papers\thesis\thesis.tex"
 merged_file_path = "latex_sample_merged.tex"
 
 

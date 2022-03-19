@@ -145,9 +145,9 @@ class LatexTextParser:
                 self.toc = self.toc + "\t" + "\t" + subsubsection + "\n"
 
 
-file_path = r"C:\Users\lenovo\Downloads\[KI] Hybrid Loss for Algorithm Selection_ Regression and Ranking Loss\main.tex"
-latexTextParser = LatexTextParser(file_path)
-section_content_file, abstract_file, section_names_file = latexTextParser.latex_text_parser()
+# file_path = r"C:\Users\lenovo\OneDrive\latex_papers\[KI] Hybrid Loss for Algorithm Selection_ Regression and Ranking Loss\main.tex"
+# latexTextParser = LatexTextParser(file_path)
+# section_content_file, abstract_file, section_names_file = latexTextParser.latex_text_parser()
 # # print(section_content)
 # print(latexTextParser.toc)
 # print(latexTextParser.sub_sections_content)
