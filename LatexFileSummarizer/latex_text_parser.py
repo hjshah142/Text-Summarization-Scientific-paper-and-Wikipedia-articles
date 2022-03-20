@@ -145,12 +145,8 @@ class LatexTextParser:
                 self.toc = self.toc + "\t" + "\t" + subsubsection + "\n"
 
 
-# file_path = r"C:\Users\lenovo\OneDrive\latex_papers\[KI] Hybrid Loss for Algorithm Selection_ Regression and Ranking Loss\main.tex"
-# latexTextParser = LatexTextParser(file_path)
-# section_content_file, abstract_file, section_names_file = latexTextParser.latex_text_parser()
-# # print(section_content)
-# print(latexTextParser.toc)
-# print(latexTextParser.sub_sections_content)
-# ssd = open(latex_file_path, 'r').read()
-# answer = find_substring(ssd, "\subsection{Evaluation Setup}","\subsection{Results}")
-# print(answer)
+file_path = r"C:\Users\lenovo\OneDrive\latex_papers\[KI] Hybrid Loss for Algorithm Selection_ Regression and Ranking Loss\main.tex"
+latexTextParser = LatexTextParser(file_path)
+section_content_file, abstract_file, section_names_file = latexTextParser.latex_text_parser()
+# print(section_content)
+
