@@ -2,6 +2,8 @@ from LatexFileSummarizer.latex_files_merger import LatexFilesMerger
 from LatexFileSummarizer.latex_text_parser import LatexTextParser
 
 latex_dir_name = r"C:\Users\lenovo\OneDrive\latex_papers\thesis"
+latex_dir_name = "/content/drive/MyDrive/thesis"
+
 main_file_path = r"C:\Users\lenovo\OneDrive\latex_papers\thesis\thesis.tex"
 merged_file_path = "latex_sample_merged.tex"
 
@@ -14,9 +16,10 @@ def merge_latex_files(latex_dir_name, main_latex_file_path, merged_file_path):
             print("Merged File", merged_file_path, "created !!!")
             f.write(merged_text_content)
     except FileNotFoundError:
-        print("The directory does not exist/accecible")
+        print("The directory does not exist or accessible")
 
     return merged_text_content
+
 
 
 merged_text_content = merge_latex_files(latex_dir_name, main_file_path, merged_file_path)
