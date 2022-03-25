@@ -1,6 +1,6 @@
 import re
 # from pylatexenc.latexwalker import LatexWalker, LatexEnvironmentNode
-from pylatexenc.latex2text import LatexNodes2Text
+# from pylatexenc.latex2text import LatexNodes2Text
 
 
 def find_substring(s, start_string, end_string):
@@ -40,11 +40,6 @@ class LatexTextParser:
                 latex_file_wo_comments.append(line)
         self.latex_text_wo_comments = "".join(latex_file_wo_comments)
 
-    def latex_text_parser(self):
-        latex_text_cleaned = self.latex_text_pre_processing()
-        abstract, section_names = self.latex_extract_abstract_sections(latex_text_cleaned)
-        section_content = self.get_sections_text(section_names, latex_text_cleaned)
-        return section_content, abstract, section_names
 
     def latex_text_pre_processing(self):
         figure_content = re.findall(r'\\begin{figure}(.*?)\\end{figure}', self.latex_text_wo_comments, re.S)
@@ -63,7 +58,8 @@ class LatexTextParser:
         abstract = re.findall(r'\\begin{abstract}(.*?)\\end{abstract}', latex_text_cleaned, re.S)
         self.section_names = re.findall(r'\\section{(.*?)}', latex_text_cleaned, re.S)
         abstract_text = abstract[0]
-        self.abstract = LatexNodes2Text().latex_to_text(abstract_text)
+        # self.abstract = LatexNodes2Text().latex_to_text(abstract_text)
+        self.abstract = abstract_text
         return self.abstract, self.section_names
 
     def get_sections_text(self, section_names, latex_text_cleaned):
@@ -87,8 +83,9 @@ class LatexTextParser:
             self.latex_metadata[section_title] = sub_section_names
             self.sub_sections_dict[section_title] = sub_section_content
             self.list_subsections_content = self.list_subsections_content + sub_section_content
-            sections_text = LatexNodes2Text().latex_to_text(sections_text_latex)
-            self.section_content[section_names[section_index]] = sections_text
+            # sections_text = LatexNodes2Text().latex_to_text(sections_text_latex)
+            # abstract_text = sections_text_latex
+            self.section_content[section_names[section_index]] = sections_text_latex
 
         # self.section_content['abstract'] = abstract_text
         return self.section_content
@@ -144,9 +141,15 @@ class LatexTextParser:
                 print("\t\t subsections:", subsubsection)
                 self.toc = self.toc + "\t" + "\t" + subsubsection + "\n"
 
+    def latex_text_parser(self):
+        latex_text_cleaned = self.latex_text_pre_processing()
+        abstract, section_names = self.latex_extract_abstract_sections(latex_text_cleaned)
+        sections_content = self.get_sections_text(section_names, latex_text_cleaned)
+        return abstract, section_names, sections_content
 
-file_path = r"C:\Users\lenovo\OneDrive\latex_papers\[KI] Hybrid Loss for Algorithm Selection_ Regression and Ranking Loss\main.tex"
-latexTextParser = LatexTextParser(file_path)
-section_content_file, abstract_file, section_names_file = latexTextParser.latex_text_parser()
+
+# file_path = r"..\latex_papers\[KI] Hybrid Loss for Algorithm Selection_ Regression and Ranking Loss\main.tex"
+# latexTextParser = LatexTextParser(file_path)
+# section_content_file, abstract_file, section_names_file = latexTextParser.latex_text_parser()
 # print(section_content)
 

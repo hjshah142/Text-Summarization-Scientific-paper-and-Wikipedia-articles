@@ -40,7 +40,7 @@ class LatexFilesMerger:
     def replace_file_content(self, main_latex_text_wo_comments, input_file_path_content_dir):
         main_latex_file_content_new = main_latex_text_wo_comments
         for import_file in input_file_path_content_dir:
-            print(import_file)
+            # print(import_file)
             main_latex_file_content_new = main_latex_file_content_new.replace(import_file,
                                                                               input_file_path_content_dir[import_file])
         return main_latex_file_content_new
