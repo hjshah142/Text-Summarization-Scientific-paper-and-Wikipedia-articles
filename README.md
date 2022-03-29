@@ -1,6 +1,31 @@
+# System Architecture
 
 
-# Text Summarization on scientific research paper datasets and wikipedia articles
+![](../../../../Downloads/MicrosoftTeams-image.png)
+
+# Tasks
+
+- Text summarization on the latex files of research papers using different extractive and abstractive text summarization algorithms 
+- Merges all the latex files by walking through all the latex files used for creating documents
+- Extracting meta data from Latex files
+  - Abstract
+  - Section Names
+  - Section Content
+  - Subsections
+  - Table of Content
+  - Number of Figures
+  - Number of Tables
+  - Number of Equation
+  - Citations
+  - References
+
+- Find text summary for every section and abstract using different text summarization approaches 
+
+- Create pdf report representing table of content, latex metadata and summary for every sections 
+        
+
+
+## Text Summarization on scientific research paper datasets and wikipedia articles
 Main tasks of this python projects:   
 1. Extract text (abstract , content (body)) from the pdf files of research paper using  different python libraries to extract text from the pdf
   
@@ -16,7 +41,7 @@ Main tasks of this python projects:
     - pdfminer
     
 - Implementation of the following text summarization algorithms:
-    - Transfromers library pipeline (default summarizer)
+    - Transformers library pipeline (default summarizer)
     - XLM Transformers
     - Google Bigbird summarizer with attention mechanism
     - GooglE pegasus xum
@@ -65,7 +90,7 @@ Preprocessing steps:
 - Remove text containig latex commands
 - Remove text inside the parenthesis {}
 - Remove any text cointaining equations 
-# Evaluation:
+## Evaluation:
 - Abstract of scientific papers used as ground-truth summaries
 - Evaluation Matrices: ROUGE (metric)
     - ROUGE: Recall-Oriented Understudy for Gisting Evaluation

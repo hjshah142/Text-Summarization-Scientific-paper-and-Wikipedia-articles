@@ -23,6 +23,7 @@ class LatexTextParser:
         extract abstract, toc, sections and subsections from the latex files
         :param latex_file_path: path of a latex file
         """
+        self.title = ""
         self.sub_sections_dict = dict()
         self.toc = ""
         self.section_content = dict()
@@ -32,6 +33,7 @@ class LatexTextParser:
         self.section_names = []
         self.abstract = ""
         self.file_path = latex_file_path
+        self.toc_dict = dict()
         latex_file_list = open(latex_file_path).readlines()
         latex_file_wo_comments = []
         # removal of comments in the latex files
@@ -60,6 +62,9 @@ class LatexTextParser:
         abstract_text = abstract[0]
         # self.abstract = LatexNodes2Text().latex_to_text(abstract_text)
         self.abstract = abstract_text
+        title = re.findall(r'\\title{(.*?)}', latex_text_cleaned, re.S)
+        self.title = " ".join(title)
+        print(self.title)
         return self.abstract, self.section_names
 
     def get_sections_text(self, section_names, latex_text_cleaned):
@@ -77,7 +82,7 @@ class LatexTextParser:
                                                  sections_tags[section_index + 1])
             # print("Section:", section_names[section_index])
             section_title = section_names[section_index]
-            self.toc = self.toc + section_title + "\n"
+            self.toc = self.toc + str(section_index+1) +". " + section_title + "\n"
 
             sub_section_names, sub_section_content = self.extract_subsection(sections_text_latex)
             self.latex_metadata[section_title] = sub_section_names
@@ -95,10 +100,10 @@ class LatexTextParser:
         sub_section_names = re.findall(r'\\subsection{(.*?)}', sections_text, re.S)
 
         # print("Subsections:", len(sub_section_names))
-        self.toc = self.toc + "Subsections:" + str(len(sub_section_names)) + "\n"
-        for subsections in sub_section_names:
+        # self.toc = self.toc + "Subsections:" + str(len(sub_section_names)) + "\n"
+        for index, subsections in enumerate(sub_section_names):
             # print("\t", subsections)
-            self.toc = self.toc + "\t" + subsections + "\n"
+            self.toc = self.toc + "      " + "\t" + str(index+1)+". " + subsections + "\n"
         sub_section_content = []
         if len(sub_section_names) > 0:
             sub_section_content = self.get_subsections_content(sub_section_names, sections_text, )
@@ -129,7 +134,6 @@ class LatexTextParser:
         last_sub_section_text = find_list_subsection_content(sections_text, sub_sections_tags[-1])
         sub_section_content.append(last_sub_section_text)
         # print(last_sub_section_text)
-        # TODO extract subsubsection content
         self.get_subsubsections(sub_section_content)
         return sub_section_content
 
@@ -137,9 +141,10 @@ class LatexTextParser:
         sub_sub_section_content_tex = " ".join(sub_section_content)
         sub_sub_section_names = re.findall(r'\\subsubsection{(.*?)}', sub_sub_section_content_tex, re.S)
         if len(sub_sub_section_names) > 0:
-            for subsubsection in sub_sub_section_names:
+            for ind, subsubsection in enumerate(sub_sub_section_names):
                 print("\t\t subsections:", subsubsection)
-                self.toc = self.toc + "\t" + "\t" + subsubsection + "\n"
+                self.toc = self.toc + "          "+ "\t"+ "\t" + str(ind+1) +". "+ subsubsection + "\n"
+        return sub_sub_section_names
 
     def latex_text_parser(self):
         latex_text_cleaned = self.latex_text_pre_processing()
@@ -148,8 +153,9 @@ class LatexTextParser:
         return abstract, section_names, sections_content
 
 
-# file_path = r"..\latex_papers\[KI] Hybrid Loss for Algorithm Selection_ Regression and Ranking Loss\main.tex"
+# file_path = r"..\..\latex_papers\[KI] Hybrid Loss for Algorithm Selection_ Regression and Ranking Loss\main.tex"
 # latexTextParser = LatexTextParser(file_path)
 # section_content_file, abstract_file, section_names_file = latexTextParser.latex_text_parser()
-# print(section_content)
+# print(latexTextParser.toc)
+
 

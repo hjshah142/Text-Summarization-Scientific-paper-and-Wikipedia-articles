@@ -7,7 +7,6 @@ from LatexFileSummarizer.text_summarizer import TextSummarizer
 
 textSummarizer = TextSummarizer()
 
-
 pickle_file_path = r"..\TextSummaryModels\text_summary_obj.pkl"
 pickle_file_object = open(pickle_file_path, 'rb')
 # textSummarizer = pickle.load(pickle_file_object)
@@ -53,12 +52,10 @@ class LatexFileSummaryReport:
 
     def generate_sections_summary(self, abstract, sections_content):
         self.sections_summary_dictionary = {}
-        abstract_summary = textSummarizer.text_summarizer(abstract)
-        # print(abstract_summary)
         for sections in sections_content:
             print(sections)
             # text_summary_dict = sections_content[sections][0:500]
-            text_summary_dict = textSummarizer.text_summarizer(sections_content[sections][0:1000])
+            text_summary_dict = textSummarizer.text_summarizer(sections_content[sections][0:3000])
 
             self.sections_summary_dictionary[sections] = text_summary_dict
 
@@ -86,12 +83,22 @@ class LatexFileSummaryReport:
                  ln=True, align='L')
         print(abstract_text)
         pdf.multi_cell(180, 7, txt=abstract_cleaned, align='L')
+        # writing a title to pdf
+        pdf.cell(180, 7, txt="Title", align='C', ln=True, )
+        pdf.multi_cell(180, 7, txt=self.latex_parser_obj.title, align='L')
 
         pdf.cell(180, 7, txt="Table of Contents", align='C', ln=True, border=True)
         print(table_of_content)
         pdf.multi_cell(180, 7, txt=table_of_content, align='L')
-        # # create a cell
-        # pdf.cell(200, 10, txt="Summary:", ln=1, align='C')
+
+        pdf.cell(180, 7, txt="Total Figures in documents:" + str(self.latex_parser_obj.latex_metadata['Figures'])
+                 , align='C', ln=True)
+        pdf.cell(180, 7, txt="Total Equations in documents:" + str(self.latex_parser_obj.latex_metadata['Equations'])
+                 , align='C', ln=True)
+        pdf.cell(180, 7, txt="Total Tables in documents:" + str(self.latex_parser_obj.latex_metadata['Tables'])
+                 , align='C', ln=True)
+
+        # pdf.multi_cell(180, 7, txt=self.latex_parser_obj.latex_metadata['Figures'], align='L')
 
         for section in sections_summary_dict:
             print(section)
@@ -115,14 +122,16 @@ class LatexFileSummaryReport:
         pdf.output(pdf_file_path, 'F')
 
 
-if __name__ == '__main__':
-    merged_latex_file_path = "latex_sample_merged.tex"
-    latex_dir_name = r"..\latex_papers\2001.06776"
-    latex_file_path = r"..\latex_papers\2001.06776\Krishnamurthy20.tex"
-    pdf_file_path = r"Data\latex_summary_result.pdf"
-    latex_summary_report = LatexFileSummaryReport(latex_dir_name, latex_file_path)
-    merged_text_content = latex_summary_report.merge_latex_files(merged_latex_file_path)
-    abstract, section_names, sections_content, latex_parser = latex_summary_report.extract_latex_metadata(
-        merged_latex_file_path)
-    sections_summary_dict = latex_summary_report.generate_sections_summary(abstract, sections_content)
-    latex_summary_report.create_pdf_report_latex_files(abstract, sections_summary_dict, latex_parser.toc, pdf_file_path)
+# if __name__ == '__main__':
+#     merged_latex_file_path = "latex_sample_merged.tex"
+#     # latex_dir_name = r"..\latex_papers\2001.06776"
+#     latex_dir_name = r"..\latex_papers\[KI] Hybrid Loss for Algorithm Selection_ Regression and Ranking Loss"
+#     # r"..\..\latex_papers\[KI] Hybrid Loss for Algorithm Selection_ Regression and Ranking Loss\main.tex
+#     latex_file_path = r"..\latex_papers\[KI] Hybrid Loss for Algorithm Selection_ Regression and Ranking Loss\main.tex"
+#     pdf_file_path = r"Data\latex_summary_result.pdf"
+#     latex_summary_report = LatexFileSummaryReport(latex_dir_name, latex_file_path)
+#     merged_text_content = latex_summary_report.merge_latex_files(merged_latex_file_path)
+#     abstract, section_names, sections_content, latex_parser = latex_summary_report.extract_latex_metadata(
+#         merged_latex_file_path)
+#     sections_summary_dict = latex_summary_report.generate_sections_summary(abstract, sections_content)
+#     latex_summary_report.create_pdf_report_latex_files(abstract, sections_summary_dict, latex_parser.toc, pdf_file_path)

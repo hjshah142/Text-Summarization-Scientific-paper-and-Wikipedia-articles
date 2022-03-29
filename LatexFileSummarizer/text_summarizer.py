@@ -34,6 +34,8 @@ def set_summary_length(text):
 
 class TextSummarizer:
     def __init__(self):
+        """Performs text summarization for the given text by implementing different text summarization models
+         __init__ method initialize all the models for text summary"""
         self.num_sentences = None
         self.max_len = None
         self.min_len = None
@@ -55,6 +57,13 @@ class TextSummarizer:
 
     @staticmethod
     def set_summary_length(text):
+        """
+        set the length of summary for extractive and abstractive summary based on size of tokens and number of
+        sentences in text.
+        :param text: text to be summarized
+        :return:  minimum maximum size of tokens for transformers models and number of sentence in summary for
+        extractive summary
+        """
         number_of_words = len(word_tokenize(text))
         number_of_sentences = len(sent_tokenize(text))
         print(number_of_words)
@@ -119,7 +128,13 @@ class TextSummarizer:
         self.text_summary_dict['gensim_summary'] = summary_gensim
 
     def text_summarizer(self, summary_text):
+        """
+        Performs text summarization for give text using different text summarization approaches and save results in
+        dictionary format where keys are summarization algorithm and values representing the summary generated using
 
+        :param summary_text:
+        :return: text_summary_dict: summary generated using different summarizers
+        """
         # device = 'cuda' if torch.cuda.is_available() else 'cpu'
         # self.text_summary_dict['_text_'] = text
         self.min_len, self.max_len, self.num_sentences = self.set_summary_length(summary_text)

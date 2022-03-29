@@ -6,6 +6,13 @@ from pathlib import Path
 class LatexFilesMerger:
 
     def __init__(self, latext_directory_name, main_latex_file_path):
+        """
+        Merges all the latex files by walking through all the files used for creating documents
+        and replace it with command and save the merged latex contents it into single file
+
+        :param latext_directory_name:
+        :param main_latex_file_path:
+        """
         self.latext_directory_name = latext_directory_name
         self.main_latex_file_path = main_latex_file_path
 
